@@ -13,4 +13,4 @@ Additional software packages:
 
 # Usage
 
-Same as official [gocd-agent-dind](https://github.com/gocd/docker-gocd-agent)
+Same as official [gocd-agent-dind](https://github.com/gocd/docker-gocd-agent-dind)
