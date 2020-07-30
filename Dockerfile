@@ -1,4 +1,4 @@
-ARG GOCD_VERSION=v20.5.0
+ARG GOCD_VERSION=v20.6.0
 
 # Docker compose
 FROM docker/compose:1.26.0 AS compose
