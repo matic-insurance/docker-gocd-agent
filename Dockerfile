@@ -28,7 +28,8 @@ USER root
 RUN apk add --update --no-cache \
     jq=~1.6 \
     gnupg=~2.2 \
-    make=~4.3
+    make=~4.3 \
+    libstdc++
 
 COPY --from=compose --chown=go:root /usr/local/bin/docker-compose /usr/local/bin/docker-compose
 COPY --from=build --chown=go:root /usr/local/bin/helm /usr/local/bin/helm
