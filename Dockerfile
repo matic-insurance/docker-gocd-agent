@@ -8,7 +8,7 @@ FROM golang:alpine3.12 AS ecr-credentials
 RUN apk --no-cache add git=~2.26 && \
     go get -u github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login
 
-# Helm AWS CLI and kubectl
+# Helm and kubectl
 FROM alpine:3.12 AS build
 RUN apk add --update --no-cache curl
 
