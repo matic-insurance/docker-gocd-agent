@@ -8,7 +8,7 @@ FROM golang:alpine3.12 AS ecr-credentials
 RUN apk --no-cache add git=~2.26 && \
     go get -u github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login
 
-# Helm and kubectl
+# Helm AWS CLI and kubectl
 FROM alpine:3.12 AS build
 RUN apk add --update --no-cache curl
 
@@ -23,6 +23,11 @@ RUN curl -o /tmp/kubectl https://storage.googleapis.com/kubernetes-release/relea
 # GOCD image
 FROM gocd/gocd-agent-docker-dind:"${GOCD_VERSION}"
 USER root
+
+# AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install -b /usr/local/bin
 
 #Install tools
 RUN apk add --update --no-cache \
