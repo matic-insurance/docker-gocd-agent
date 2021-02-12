@@ -9,6 +9,7 @@ Additional software packages:
 * kubectl
 * jq
 * gpg
+* AWS CLI
 
 
 # Usage
