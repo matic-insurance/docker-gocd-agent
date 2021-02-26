@@ -8,21 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to ECR
-        id: ecr
-        uses: jwalton/gh-ecr-login@v1
-        with:
-          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: us-east-1
+      - uses: actions/checkout@v1
       - name: Build the Docker image
-        run: docker build . -f Dockerfile -t ${{ steps.ecr.outputs.account }}.dkr.ecr.us-east-1.amazonaws.com/gocd-agent:latest
+        run: docker build . -f Dockerfile -t maticinsurance/gocd-agent:latest
       - name: Define Docker tag
         run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
       - name: Tag docker image
-        run: docker tag ${{ steps.ecr.outputs.account }}.dkr.ecr.us-east-1.amazonaws.com/gocd-agent:latest ${{ steps.ecr.outputs.account }}.dkr.ecr.us-east-1.amazonaws.com/gocd-agent:$(<docker.tag)
-      - name: Push to ECR
-        run: |
-          docker push ${{ steps.ecr.outputs.account }}.dkr.ecr.us-east-1.amazonaws.com/gocd-agent:latest
-          docker push ${{ steps.ecr.outputs.account }}.dkr.ecr.us-east-1.amazonaws.com/gocd-agent:$(<docker.tag)
-
+        run: docker tag maticinsurance/gocd-agent:latest maticinsurance/gocd-agent:$(<docker.tag)
+      - name: Login to Docker
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push latest image
+        run: docker push maticinsurance/gocd-agent:latest
+      - name: Push tagged image
+        run: docker push maticinsurance/gocd-agent:$(<docker.tag)
