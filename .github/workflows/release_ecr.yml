@@ -1,9 +1,10 @@
-name: release
+name: release_ecr
 
 on:
-  release:
-    types: [published]
-
+  push:
+    branches:
+      - feature/move_to_ecr
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
