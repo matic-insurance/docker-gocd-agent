@@ -1,9 +1,9 @@
 name: release_ecr
 
 on:
-  push:
-    branches:
-      - feature/move_to_ecr
+  release:
+    types: [published]
+
  
 jobs:
   build:
@@ -25,8 +25,7 @@ jobs:
       - name: Build the Docker image
         run: docker build . -f Dockerfile -t ${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}/gocd-agent:latest
       - name: Define Docker tag
-        # run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
-        run: echo "v0.1.2" > docker.tag
+        run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
       - name: Tag docker image
         run: docker tag ${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}/gocd-agent:latest ${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}/gocd-agent:$(<docker.tag)
       - name: Push latest image
