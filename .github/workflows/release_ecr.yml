@@ -31,10 +31,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: matic
         run: |
-          echo "${GITHUB_REF/refs\/tags\//}"
-          docker build . -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:gocd-agent:$(<docker.tag) .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:gocd-agent:$(<docker.tag)
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:gocd-agent:$(<docker.tag)"
+          docker build . -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:gocd-agent:v0.0.1 .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:gocd-agent:v0.0.1
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:gocd-agent:v0.0.1"
 
       - name: Log out of Amazon ECR
         if: always()
