@@ -15,7 +15,7 @@ jobs:
       - name: Login to Public ECR
         uses: docker/login-action@v1
         with:
-          registry: public.ecr.aws/matic
+          registry: public.ecr.aws
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         env:
