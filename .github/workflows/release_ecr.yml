@@ -18,25 +18,30 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Define Docker tag
-        run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
-
-      - name: Build, tag, and push image to Amazon ECR
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Public ECR
+        uses: docker/login-action@v1
+        with:
+          registry: public.ecr.aws/matic
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: matic
-        run: |
-          echo $ECR_REGISTRY/$ECR_REPOSITORY
-          # docker build . -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:v0.0.1
-          # docker push $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:v0.0.1
-          # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:v0.0.1"
+          AWS_REGION: us-west-2
 
-      - name: Log out of Amazon ECR
-        if: always()
-        run: docker logout ${{ steps.login-ecr.outputs.registry }}
-
+      - uses: actions/checkout@v1
+      - name: Build the Docker image
+        # run: docker build . -f Dockerfile -t matic/gocd-agent:latest
+      #   run: docker build . -f Dockerfile -t maticinsurance/gocd-agent:latest
+      # - name: Define Docker tag
+      #   run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
+      # - name: Tag docker image
+      #   run: docker tag maticinsurance/gocd-agent:latest maticinsurance/gocd-agent:$(<docker.tag)
+      # - name: Login to Docker
+      #   run: docker login -u ${{ secrets.AWS_ACCESS_KEY_ID }} -p ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # - name: Push latest image
+      #   run: docker push maticinsurance/gocd-agent:latest
+      # - name: Push tagged image
+      #   run: docker push maticinsurance/gocd-agent:$(<docker.tag)
