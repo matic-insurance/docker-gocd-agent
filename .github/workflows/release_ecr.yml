@@ -8,11 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ECR_REGISTRY: public.ecr.aws
+      ECR_REPOSITORY: matic
     steps:
       - name: Login to Public ECR
         uses: docker/login-action@v1
         with:
-          registry: public.ecr.aws
+          registry: $ECR_REGISTRY
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # logout: true
@@ -20,13 +23,13 @@ jobs:
           AWS_REGION: us-east-1
       - uses: actions/checkout@v1
       - name: Build the Docker image
-        run: docker build . -f Dockerfile -t public.ecr.aws/matic/gocd-agent:latest
+        run: docker build . -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:latest
       - name: Define Docker tag
         # run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
         run: echo "v0.1.1" > docker.tag
       - name: Tag docker image
-        run: docker tag public.ecr.aws/matic/gocd-agent:latest public.ecr.aws/matic/gocd-agent:$(<docker.tag)
+        run: docker tag $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:latest $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:$(<docker.tag)
       - name: Push latest image
-        run: docker push public.ecr.aws/matic/gocd-agent:latest
+        run: docker push $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:latest
       - name: Push tagged image
-        run: docker push public.ecr.aws/matic/gocd-agent:$(<docker.tag)
+        run: docker push $ECR_REGISTRY/$ECR_REPOSITORY/gocd-agent:$(<docker.tag)
