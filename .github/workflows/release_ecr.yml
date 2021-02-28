@@ -15,20 +15,19 @@ jobs:
           registry: public.ecr.aws
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # logout: true
         env:
           AWS_REGION: us-east-1
 
       - uses: actions/checkout@v1
       - name: Build the Docker image
-        run: docker build . -f Dockerfile -t matic/gocd-agent:latest
+        run: docker build . -f Dockerfile -t public.ecr.aws/matic/gocd-agent:latest
       - name: Define Docker tag
         # run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
-        run: echo "v0.0.1" > docker.tag
+        run: echo "v0.1.1" > docker.tag
       - name: Tag docker image
-        run: docker tag matic/gocd-agent:latest matic/gocd-agent:$(<docker.tag)
-      # - name: Login to Docker
-      #   run: docker login -u ${{ secrets.AWS_ACCESS_KEY_ID }} -p ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: docker tag public.ecr.aws/matic/gocd-agent:latest public.ecr.aws/matic/gocd-agent:$(<docker.tag)
       - name: Push latest image
-        run: docker push matic/gocd-agent:latest
+        run: docker push public.ecr.aws/matic/gocd-agent:latest
       - name: Push tagged image
-        run: docker push matic/gocd-agent:$(<docker.tag)
+        run: docker push public.ecr.aws/matic/gocd-agent:$(<docker.tag)
