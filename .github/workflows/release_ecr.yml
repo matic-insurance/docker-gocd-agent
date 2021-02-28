@@ -22,7 +22,8 @@ jobs:
       - name: Build the Docker image
         run: docker build . -f Dockerfile -t matic/gocd-agent:latest
       - name: Define Docker tag
-        run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
+        # run: echo "${GITHUB_REF/refs\/tags\//}" > docker.tag
+        run: echo "v0.0.1" > docker.tag
       - name: Tag docker image
         run: docker tag matic/gocd-agent:latest matic/gocd-agent:$(<docker.tag)
       # - name: Login to Docker
